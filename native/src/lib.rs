@@ -11,7 +11,7 @@ pub fn upload_data(strings: Vec<String>) -> napi::Result<()> {
 #[napi]
 pub fn find_nearest_neighbors(
   query: String,
-  k: usize,
+  k: u32,
   word_order_sensitive: Option<bool>,
 ) -> napi::Result<Vec<String>> {
   k_nearest_neighbour_sort(query, k, word_order_sensitive)
