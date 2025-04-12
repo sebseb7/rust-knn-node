@@ -16,32 +16,22 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 16
-        # Skip npm caching for now (will add back after generating package-lock.json)
-        # cache: 'npm'
+        cache: 'npm'
 
-    - name: Install Rust (Windows)
-      if: matrix.os == 'windows-latest'
+    - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
         components: rustfmt, clippy
-
-    - name: Install Rust (Unix)
-      if: matrix.os != 'windows-latest'
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-        components: rustfmt, clippy
         
-    - name: Cache Rust Dependencies (All platforms)
-      uses: actions/cache@v3
+    - name: Cache Rust Dependencies
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cargo/registry
