@@ -4,8 +4,8 @@
   "description": "Node.js bindings for rust_knn - a fast k-nearest neighbors library for string data",
   "main": "src/index.js",
   "scripts": {
-    "build": "napi build --platform --release",
-    "build:debug": "napi build --platform",
+    "build": "napi build --platform --release native",
+    "build:debug": "napi build --platform native",
     "test": "node test.js",
     "example": "node examples/basic.js"
   },
@@ -29,7 +29,8 @@
     "name": "rust-knn-node",
     "triples": {
       "defaults": true
-    }
+    },
+    "path": "./native"
   },
   "files": [
     "src",

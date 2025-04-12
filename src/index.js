@@ -1,4 +1,26 @@
-const { upload_data, find_nearest_neighbors } = require('../native');
+// Try to load the native module from different possible locations
+let nativeModule;
+try {
+  // First try the standard location
+  nativeModule = require('../native');
+} catch (err) {
+  try {
+    // Then try the platform-specific build location
+    nativeModule = require('../native/rust-knn-node.node');
+  } catch (err2) {
+    // Finally try the direct release path
+    try {
+      const { platform, arch } = process;
+      nativeModule = require(`../native/${platform}-${arch}/release/rust-knn-node.node`);
+    } catch (err3) {
+      throw new Error(
+        `Failed to load native module. Tried multiple locations. Original error: ${err.message}`
+      );
+    }
+  }
+}
+
+const { upload_data, find_nearest_neighbors } = nativeModule;
 
 /**
  * RustKNN - A Node.js wrapper for the rust_knn library

@@ -23,7 +23,15 @@ jobs:
       with:
         node-version: 16
 
-    - name: Install Rust
+    - name: Install Rust (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: stable
+        components: rustfmt, clippy
+
+    - name: Install Rust (Unix)
+      if: matrix.os != 'windows-latest'
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
@@ -38,7 +46,7 @@ jobs:
       
     - name: Create test file
       run: |
-        cat > test.js << EOF
+        cat > test.js << 'EOF'
         const RustKNN = require('./src');
         
         // Test data
