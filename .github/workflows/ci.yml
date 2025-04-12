@@ -45,17 +45,31 @@ jobs:
         cat > Cargo.toml << EOF
         [workspace]
         members = ["native"]
+        resolver = "2"
+
+        [profile.release]
+        lto = true
         EOF
 
     - name: Install dependencies
       run: npm install
       
+    - name: Debug Cargo.toml files
+      shell: bash
+      run: |
+        echo "Root Cargo.toml:"
+        cat Cargo.toml
+        echo ""
+        echo "Native Cargo.toml:"
+        cat native/Cargo.toml
+        
     - name: Build library (Windows)
       if: matrix.os == 'windows-latest'
       shell: bash
       run: |
         cd native
         cargo build --release
+        mkdir -p ../native
         cp target/release/rust_knn_node.dll ../native/rust-knn-node.node
         cd ..
       
@@ -65,6 +79,7 @@ jobs:
       run: |
         cd native
         cargo build --release
+        mkdir -p ../native
         cp target/release/librust_knn_node.dylib ../native/rust-knn-node.node
         cd ..
         
@@ -74,6 +89,7 @@ jobs:
       run: |
         cd native
         cargo build --release
+        mkdir -p ../native
         cp target/release/librust_knn_node.so ../native/rust-knn-node.node
         cd ..
       

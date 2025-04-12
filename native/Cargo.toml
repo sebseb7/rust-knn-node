@@ -10,7 +10,7 @@ name = "rust_knn_node"
 [dependencies]
 napi = "2.15.0"
 napi-derive = "2.15.0"
-rust_knn = "0.1.0"
+rust_knn = { git = "https://github.com/sebseb7/rust_knn.git" }
 
 [build-dependencies]
 napi-build = "2.0.1"
