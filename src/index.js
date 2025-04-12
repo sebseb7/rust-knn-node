@@ -76,20 +76,7 @@ try {
         searchDir(path.join(process.cwd(), 'native'));
       }
       
-      // Create a mock module for development/testing
-      console.log('Creating mock module for testing');
-      nativeModule = {
-        uploadData: (strings) => {
-          console.log('MOCK: Uploaded strings:', strings);
-          return;
-        },
-        findNearestNeighbors: (query, k, wordOrderSensitive) => {
-          console.log('MOCK: Finding neighbors for:', query, 'k:', k, 'wordOrderSensitive:', wordOrderSensitive);
-          return ['apple', 'banana', 'orange'].sort((a, b) => 
-            Math.abs(a.length - query.length) - Math.abs(b.length - query.length)
-          ).slice(0, k);
-        }
-      };
+      throw new Error('Failed to load the native module. Make sure the Rust library is properly built and available.');
     }
   }
 }
