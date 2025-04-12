@@ -101,7 +101,7 @@ jobs:
       shell: bash
       run: |
         # Build from the workspace root
-        cargo build --release
+        MACOSX_DEPLOYMENT_TARGET=10.13 cargo build --release
         
         # Check directory structure
         echo "Workspace directory structure:"
@@ -113,11 +113,17 @@ jobs:
         
         # Copy the library to the expected location
         mkdir -p native
+        
+        # Use direct path if we know where it is
+        cp target/release/librust_knn_node.dylib native/rust-knn-node.node || \
         find . -name "librust_knn_node.dylib" -exec cp {} native/rust-knn-node.node \; || \
         echo "Could not find the dylib file"
         
         # List directory to verify
         ls -la native/
+        
+        # On macOS, we might need to adjust the binary
+        install_name_tool -id @loader_path/librust_knn_node.dylib native/rust-knn-node.node || true
         
     - name: Build library (Ubuntu)
       if: matrix.os == 'ubuntu-latest'

@@ -3,13 +3,13 @@
 use napi_derive::napi;
 use rust_knn::{upload_strings, k_nearest_neighbour_sort};
 
-#[napi]
-pub fn uploadData(strings: Vec<String>) -> napi::Result<()> {
+#[napi(js_name = "uploadData")]
+pub fn upload_data(strings: Vec<String>) -> napi::Result<()> {
   upload_strings(strings).map_err(|e| napi::Error::from_reason(e.to_string()))
 }
 
-#[napi]
-pub fn findNearestNeighbors(
+#[napi(js_name = "findNearestNeighbors")]
+pub fn find_nearest_neighbors(
   query: String,
   k: u32,
   word_order_sensitive: Option<bool>,
