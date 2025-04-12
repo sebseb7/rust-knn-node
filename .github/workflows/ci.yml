@@ -22,7 +22,19 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 16
-        cache: 'npm'
+        # We'll use a separate cache step instead
+        
+    # Explicit npm caching
+    - name: Cache npm dependencies
+      uses: actions/cache@v4
+      id: npm-cache
+      with:
+        path: |
+          ~/.npm
+          node_modules
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
 
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
@@ -30,14 +42,16 @@ jobs:
         toolchain: stable
         components: rustfmt, clippy
         
-    - name: Cache Rust Dependencies
+    # Explicit Cargo caching
+    - name: Cache Cargo dependencies
       uses: actions/cache@v4
+      id: cargo-cache
       with:
         path: |
           ~/.cargo/registry
           ~/.cargo/git
           target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock', '**/Cargo.toml') }}
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
         restore-keys: |
           ${{ runner.os }}-cargo-
 
@@ -56,6 +70,11 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      
+    - name: Debug cache status
+      run: |
+        echo "npm cache hit: ${{ steps.npm-cache.outputs.cache-hit == 'true' }}"
+        echo "cargo cache hit: ${{ steps.cargo-cache.outputs.cache-hit == 'true' }}"
       
     - name: Debug Cargo.toml files
       shell: bash
