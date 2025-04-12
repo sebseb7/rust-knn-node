@@ -22,7 +22,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16
-        cache: 'npm'
+        # Skip npm caching for now (will add back after generating package-lock.json)
+        # cache: 'npm'
 
     - name: Install Rust (Windows)
       if: matrix.os == 'windows-latest'
