@@ -22,6 +22,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: 16
+        cache: 'npm'
 
     - name: Install Rust (Windows)
       if: matrix.os == 'windows-latest'
@@ -37,6 +38,17 @@ jobs:
         toolchain: stable
         override: true
         components: rustfmt, clippy
+        
+    - name: Cache Rust Dependencies (All platforms)
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock', '**/Cargo.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-
 
     - name: Create root Cargo.toml
       shell: bash
