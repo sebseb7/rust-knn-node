@@ -63,6 +63,15 @@ jobs:
         echo "Native Cargo.toml:"
         cat native/Cargo.toml
         
+    - name: Create index.js for native module
+      shell: bash
+      run: |
+        mkdir -p native
+        cat > native/index.js << 'EOF'
+        const path = require('path');
+        module.exports = require('./rust-knn-node.node');
+        EOF
+        
     - name: Build library (Windows)
       if: matrix.os == 'windows-latest'
       shell: bash
@@ -133,9 +142,35 @@ jobs:
         # List directory to verify
         ls -la native/
       
+    - name: Create package.json for native module
+      shell: bash
+      run: |
+        cat > native/package.json << 'EOF'
+        {
+          "name": "rust-knn-node-native",
+          "version": "1.0.0",
+          "description": "Native bindings for rust_knn",
+          "main": "index.js",
+          "files": ["rust-knn-node.node", "index.js"]
+        }
+        EOF
+        
+        # List directory to verify
+        ls -la native/
+      
     - name: Create test file
       run: |
         cat > test.js << 'EOF'
+        // Debug info
+        console.log("Debug: Current working directory:", process.cwd());
+        console.log("Debug: Directory contents of 'native':");
+        const fs = require('fs');
+        try {
+          console.log(fs.readdirSync('./native'));
+        } catch (e) {
+          console.log("Error reading native dir:", e.message);
+        }
+        
         const RustKNN = require('./src');
         
         // Test data
