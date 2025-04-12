@@ -31,7 +31,8 @@
     "triples": {
       "defaults": true
     },
-    "path": "./native"
+    "path": "./native",
+    "libName": "rust_knn_node"
   },
   "files": [
     "src",

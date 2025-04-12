@@ -69,8 +69,13 @@ jobs:
       run: |
         cd native
         cargo build --release
+        echo "Listing target directory contents:"
+        find target -name "*.dll" -o -name "*.lib" -o -name "*.pdb"
+        echo "Creating output directory"
         mkdir -p ../native
-        cp target/release/rust_knn_node.dll ../native/rust-knn-node.node
+        cp target/release/rust_knn_node.dll ../native/rust-knn-node.node || \
+        cp target/release/librust_knn_node.dll ../native/rust-knn-node.node || \
+        echo "Could not find the DLL file"
         cd ..
       
     - name: Build library (macOS)
@@ -79,8 +84,12 @@ jobs:
       run: |
         cd native
         cargo build --release
+        echo "Listing target directory contents:"
+        find target -name "*.dylib" -o -name "*.a"
+        echo "Creating output directory"
         mkdir -p ../native
-        cp target/release/librust_knn_node.dylib ../native/rust-knn-node.node
+        cp target/release/librust_knn_node.dylib ../native/rust-knn-node.node || \
+        echo "Could not find the dylib file"
         cd ..
         
     - name: Build library (Ubuntu)
@@ -89,8 +98,12 @@ jobs:
       run: |
         cd native
         cargo build --release
+        echo "Listing target directory contents:"
+        find target -name "*.so" -o -name "*.a"
+        echo "Creating output directory"
         mkdir -p ../native
-        cp target/release/librust_knn_node.so ../native/rust-knn-node.node
+        cp target/release/librust_knn_node.so ../native/rust-knn-node.node || \
+        echo "Could not find the so file"
         cd ..
       
     - name: Create test file
