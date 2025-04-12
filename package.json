@@ -6,6 +6,7 @@
   "scripts": {
     "build": "napi build --platform --release native",
     "build:debug": "napi build --platform native",
+    "build:ci": "echo 'CI build uses direct cargo commands'",
     "test": "node test.js",
     "example": "node examples/basic.js"
   },

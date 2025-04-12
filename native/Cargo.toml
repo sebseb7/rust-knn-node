@@ -5,6 +5,7 @@ edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
+name = "rust_knn_node"
 
 [dependencies]
 napi = "2.15.0"

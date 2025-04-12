@@ -38,11 +38,44 @@ jobs:
         override: true
         components: rustfmt, clippy
 
+    - name: Create root Cargo.toml
+      shell: bash
+      run: |
+        echo 'Creating root Cargo.toml file'
+        cat > Cargo.toml << EOF
+        [workspace]
+        members = ["native"]
+        EOF
+
     - name: Install dependencies
       run: npm install
       
-    - name: Build library
-      run: npm run build
+    - name: Build library (Windows)
+      if: matrix.os == 'windows-latest'
+      shell: bash
+      run: |
+        cd native
+        cargo build --release
+        cp target/release/rust_knn_node.dll ../native/rust-knn-node.node
+        cd ..
+      
+    - name: Build library (macOS)
+      if: matrix.os == 'macos-latest'
+      shell: bash
+      run: |
+        cd native
+        cargo build --release
+        cp target/release/librust_knn_node.dylib ../native/rust-knn-node.node
+        cd ..
+        
+    - name: Build library (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
+      shell: bash
+      run: |
+        cd native
+        cargo build --release
+        cp target/release/librust_knn_node.so ../native/rust-knn-node.node
+        cd ..
       
     - name: Create test file
       run: |
