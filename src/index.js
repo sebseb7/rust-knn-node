@@ -79,11 +79,11 @@ try {
       // Create a mock module for development/testing
       console.log('Creating mock module for testing');
       nativeModule = {
-        upload_data: (strings) => {
+        uploadData: (strings) => {
           console.log('MOCK: Uploaded strings:', strings);
           return;
         },
-        find_nearest_neighbors: (query, k, wordOrderSensitive) => {
+        findNearestNeighbors: (query, k, wordOrderSensitive) => {
           console.log('MOCK: Finding neighbors for:', query, 'k:', k, 'wordOrderSensitive:', wordOrderSensitive);
           return ['apple', 'banana', 'orange'].sort((a, b) => 
             Math.abs(a.length - query.length) - Math.abs(b.length - query.length)
@@ -94,13 +94,13 @@ try {
   }
 }
 
-// Extract the functions from the module
-const { upload_data, find_nearest_neighbors } = nativeModule;
+// Extract the functions from the module - using camelCase
+const { uploadData, findNearestNeighbors } = nativeModule;
 
 // Check if functions are available
 if (debug) {
-  console.log('upload_data is a function?', typeof upload_data === 'function');
-  console.log('find_nearest_neighbors is a function?', typeof find_nearest_neighbors === 'function');
+  console.log('uploadData is a function?', typeof uploadData === 'function');
+  console.log('findNearestNeighbors is a function?', typeof findNearestNeighbors === 'function');
 }
 
 /**
@@ -117,11 +117,11 @@ class RustKNN {
       throw new Error('Input must be an array of strings');
     }
     
-    if (typeof upload_data !== 'function') {
-      throw new Error(`upload_data is not a function, it is a ${typeof upload_data}`);
+    if (typeof uploadData !== 'function') {
+      throw new Error(`uploadData is not a function, it is a ${typeof uploadData}`);
     }
     
-    return upload_data(strings);
+    return uploadData(strings);
   }
 
   /**
@@ -140,11 +140,11 @@ class RustKNN {
       throw new Error('k must be a positive number');
     }
     
-    if (typeof find_nearest_neighbors !== 'function') {
-      throw new Error(`find_nearest_neighbors is not a function, it is a ${typeof find_nearest_neighbors}`);
+    if (typeof findNearestNeighbors !== 'function') {
+      throw new Error(`findNearestNeighbors is not a function, it is a ${typeof findNearestNeighbors}`);
     }
     
-    return find_nearest_neighbors(query, k, wordOrderSensitive);
+    return findNearestNeighbors(query, k, wordOrderSensitive);
   }
 }
 
