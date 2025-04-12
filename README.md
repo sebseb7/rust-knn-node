@@ -11,8 +11,39 @@ A Node.js wrapper for [rust_knn](https://github.com/sebseb7/rust_knn), a fast k-
 
 ## Installation
 
+### Prerequisites
+
+Before installing, ensure you have the following dependencies:
+
+- Node.js (version 10 or higher)
+- Rust (stable toolchain)
+- Cargo (comes with Rust)
+- Git
+
+### Install from GitHub
+
 ```bash
-npm install rust-knn-node
+# Install directly from GitHub repository
+npm install sebseb7/rust-knn-node
+
+# Or with a specific branch/tag
+npm install sebseb7/rust-knn-node#main
+```
+
+### Manual Installation
+
+Alternatively, you can clone and build the repository:
+
+```bash
+# Clone the repository
+git clone https://github.com/sebseb7/rust-knn-node.git
+cd rust-knn-node
+
+# Install dependencies
+npm install
+
+# Build the Rust native module
+npm run build
 ```
 
 ## Usage
@@ -78,14 +109,14 @@ The library inherits the impressive performance of the Rust implementation:
 * Word-order sensitive search: ~20-25ms for 7000+ items
 * Word-order independent search: ~5-6ms for 7000+ items (4x faster)
 
-## Building from Source
+## Troubleshooting
 
-```bash
-git clone https://github.com/your-username/rust-knn-node.git
-cd rust-knn-node
-npm install
-npm run build
-```
+If you encounter build issues:
+
+- Make sure Rust is installed and up-to-date: `rustup update`
+- On Windows, you may need Visual Studio Build Tools
+- On macOS, you may need Xcode Command Line Tools
+- On Linux, you may need build-essential package
 
 ## License
 
