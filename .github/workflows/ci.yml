@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Build and Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+        components: rustfmt, clippy
+
+    - name: Install dependencies
+      run: npm install
+      
+    - name: Build library
+      run: npm run build
+      
+    - name: Create test file
+      run: |
+        cat > test.js << EOF
+        const RustKNN = require('./src');
+        
+        // Test data
+        const strings = ['apple', 'banana', 'orange'];
+        
+        // Test upload
+        try {
+          RustKNN.uploadStrings(strings);
+          console.log('✓ Upload successful');
+        } catch (err) {
+          console.error('✗ Upload failed:', err);
+          process.exit(1);
+        }
+        
+        // Test search (word order sensitive)
+        try {
+          const results = RustKNN.findNearestNeighbors('aple', 2);
+          console.log('✓ Word order sensitive search successful:', results);
+          if (!results.includes('apple')) {
+            console.error('✗ Expected "apple" in results');
+            process.exit(1);
+          }
+        } catch (err) {
+          console.error('✗ Word order sensitive search failed:', err);
+          process.exit(1);
+        }
+        
+        // Test search (word order independent)
+        try {
+          const results = RustKNN.findNearestNeighbors('aple', 2, false);
+          console.log('✓ Word order independent search successful:', results);
+          if (!results.includes('apple')) {
+            console.error('✗ Expected "apple" in results');
+            process.exit(1);
+          }
+        } catch (err) {
+          console.error('✗ Word order independent search failed:', err);
+          process.exit(1);
+        }
+        
+        console.log('✓ All tests passed!');
+        EOF
+      shell: bash
+      
+    - name: Run tests
+      run: node test.js 
